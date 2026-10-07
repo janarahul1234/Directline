@@ -41,25 +41,12 @@ export function isValidRoomCode(code: string): boolean {
 }
 
 /**
- * A per-tab identifier. Used only to decide which of the two peers starts the
- * negotiation (see `shouldInitiateCall`) and to route signaling messages.
+ * A per-tab identifier. Used as the ephemeral Stream user id for a session and
+ * as the identity Stream Video authenticates our token for.
  */
 export function generatePeerId(): string {
   if (typeof crypto.randomUUID === "function") {
     return crypto.randomUUID().replace(/-/g, "").slice(0, 16);
   }
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 12)}`;
-}
-
-/**
- * Deterministic role selection for a 1-to-1 call.
- *
- * Both peers need to agree on exactly ONE of them sending the initial SDP
- * "offer" so the call does not deadlock and does not "glare" (both offering at
- * once). Instead of relying on fragile join-order, we simply let the peer whose
- * id sorts *later* alphabetically be the initiator. Both sides can compute this
- * independently from the same pair of ids, so it always agrees.
- */
-export function shouldInitiateCall(myId: string, otherId: string): boolean {
-  return myId > otherId;
 }

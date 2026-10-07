@@ -102,8 +102,7 @@ function ErrorPanel({
         </div>
         <p className="flex items-center gap-1.5 text-xs text-zinc-500">
           <ShieldCheck className="size-3.5" />
-          Media is never routed through our servers, so some strict networks
-          block a direct connection.
+          Calls are relayed through Stream&apos;s secure network.
         </p>
       </div>
     </div>

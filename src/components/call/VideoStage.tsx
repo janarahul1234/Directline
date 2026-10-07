@@ -83,13 +83,13 @@ export function VideoStage({
             <StagePlaceholder
               icon={<VideoOff className="size-6" />}
               title="Their camera is off"
-              body="You're still connected directly — audio is live."
+              body="You're still connected — audio is live."
             />
           ) : (
             <StagePlaceholder
               icon={<Radio className="size-6" />}
               title="Connecting…"
-              body="Establishing a direct peer-to-peer path."
+              body="Establishing the media connection."
             />
           )
         }
