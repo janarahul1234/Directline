@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Directline — peer-to-peer video calls",
+    default: "Directline",
     template: "%s · Directline",
   },
   description:
@@ -28,8 +28,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      // Dark-first: a calling surface reads best on a dark stage, and it is a
-      // deliberate choice for this product rather than a theme toggle default.
       className={cn(
         "h-full dark antialiased",
         geistSans.variable,

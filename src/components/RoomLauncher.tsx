@@ -8,11 +8,6 @@ import { Input } from "@/components/ui/input";
 import { generateRoomId, isValidRoomCode, normalizeRoomCode } from "@/lib/room";
 import { ArrowRight, Phone } from "lucide-react";
 
-/**
- * The entry point of the product, and deliberately the hero of the landing page:
- * create a room (one tap) or join one with a code. The generated code *is* the
- * whole protocol — two people who share it get a direct line.
- */
 export function RoomLauncher() {
   const router = useRouter();
   const [code, setCode] = useState("");
@@ -20,11 +15,17 @@ export function RoomLauncher() {
 
   const create = () => router.push(`/${generateRoomId()}`);
 
+  // Live validity of the typed code: drives the embedded Join button and the
+  // Enter-to-join shortcut below.
+  const canJoin = isValidRoomCode(normalizeRoomCode(code));
+
   const join = (event: React.FormEvent) => {
     event.preventDefault();
     const normalized = normalizeRoomCode(code);
     if (!isValidRoomCode(normalized)) {
-      setError("Enter a valid room code, like abc-12345-xyz.");
+      setError(
+        "That doesn't look like a room code yet — ask your friend for theirs, like abc-12345-xyz.",
+      );
       return;
     }
     setError(null);
@@ -32,11 +33,11 @@ export function RoomLauncher() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <Button
         size="lg"
         onClick={create}
-        className="h-12 justify-between gap-2 rounded-xl px-5 text-base"
+        className="h-12 justify-between gap-2 px-4 text-base"
       >
         <span className="flex items-center gap-2">
           <Phone />
@@ -46,22 +47,25 @@ export function RoomLauncher() {
       </Button>
 
       <form onSubmit={join} className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
+        <div className="relative">
           <Input
             value={code}
             onChange={(e) => setCode(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !canJoin) e.preventDefault();
+            }}
             placeholder="abc-12345-xyz"
             spellCheck={false}
             autoComplete="off"
             aria-label="Room code"
             aria-invalid={error ? true : undefined}
-            className="h-12 rounded-xl font-mono tracking-[0.12em] uppercase placeholder:normal-case placeholder:tracking-normal placeholder:font-mono"
+            className="h-12 pr-24 pl-4"
           />
           <Button
             type="submit"
-            variant="outline"
-            size="lg"
-            className="h-12 shrink-0 rounded-xl px-5"
+            size="sm"
+            disabled={!canJoin}
+            className="absolute right-1.5 top-1/2 h-9 w-18 -translate-y-1/2"
           >
             Join
           </Button>
